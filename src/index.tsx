@@ -8,8 +8,8 @@ import { Provider } from 'react-redux';
 import App from './components/App';
 import { ErrorBoundary } from './components/common';
 
-// import { configureFakeBackend } from './helpers';
-// configureFakeBackend();
+// import { configureFakeBackend } from './helpers'
+// configureFakeBackend()
 
 ReactDOM.render(
   <ErrorBoundary>

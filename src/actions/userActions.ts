@@ -6,7 +6,9 @@ import { history } from '../helpers';
 export const userActions = {
   login,
   logout,
-  getAll
+  register,
+  getAll,
+  delete: _delete
 };
 
 function login(username: string, password: string) {
@@ -41,6 +43,35 @@ function logout() {
   return { type: userConstants.LOGOUT };
 }
 
+function register(user: any) {
+  return (dispatch: any) => {
+      dispatch(request(user));
+
+      userService.register(user)
+          .then(
+              (user: any) => {
+                  dispatch(success(user));
+                  history.push('/login');
+                  dispatch(alertActions.success('Registration successful'));
+              },
+              (error: any) => {
+                  dispatch(failure(error.toString()));
+                  dispatch(alertActions.error(error.toString()));
+              }
+          );
+  };
+
+  function request(user: any) {
+    return { type: userConstants.REGISTER_REQUEST, user };
+  }
+  function success(user: any) {
+    return { type: userConstants.REGISTER_SUCCESS, user };
+  }
+  function failure(error: any) {
+    return { type: userConstants.REGISTER_FAILURE, error };
+  }
+}
+
 function getAll() {
   return (dispatch: any) => {
     dispatch(request());
@@ -62,5 +93,28 @@ function getAll() {
   }
   function failure(error: any) {
     return { type: userConstants.GETALL_FAILURE, error };
+  }
+}
+
+// prefixed function name with underscore because delete is a reserved word in javascript
+function _delete(id: string) {
+  return (dispatch: any) => {
+      dispatch(request(id));
+
+      userService.delete(id)
+          .then(
+              (user: any) => dispatch(success(id)),
+              (error: any) => dispatch(failure(id, error.toString()))
+          );
+  };
+
+  function request(id: string) {
+    return { type: userConstants.DELETE_REQUEST, id };
+  }
+  function success(id: string) {
+    return { type: userConstants.DELETE_SUCCESS, id };
+  }
+  function failure(id: string, error: any) {
+    return { type: userConstants.DELETE_FAILURE, id, error };
   }
 }

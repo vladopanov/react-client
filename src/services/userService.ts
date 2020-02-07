@@ -4,7 +4,11 @@ import { authHeader } from '../helpers';
 export const userService = {
   login,
   logout,
-  getAll
+  register,
+  getAll,
+  getById,
+  update,
+  delete: _delete
 };
 
 async function login(username: string, password: string) {
@@ -14,7 +18,7 @@ async function login(username: string, password: string) {
     body: JSON.stringify({ username, password })
   };
 
-  const response = await fetch(`${config.apiUrl}/user/authenticate`, requestOptions);
+  const response = await fetch(`${config.apiUrl}/users/authenticate`, requestOptions);
   const user = await handleResponse(response);
   // store user details and jwt token in local storage to keep user logged in between page refreshes
   localStorage.setItem('user', JSON.stringify(user));
@@ -32,7 +36,50 @@ async function getAll() {
     headers: authHeader()
   } as any;
 
-  const response = await fetch(`${config.apiUrl}/user`, requestOptions);
+  const response = await fetch(`${config.apiUrl}/users/`, requestOptions);
+  return handleResponse(response);
+}
+
+async function getById(id: string) {
+  const requestOptions = {
+      method: 'GET',
+      headers: authHeader()
+  } as any;
+
+  const response = await fetch(`${config.apiUrl}/users/${id}`, requestOptions);
+  return handleResponse(response);
+}
+
+async function register(user: any) {
+  const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
+  } as any;
+
+  const response = await fetch(`${config.apiUrl}/users/register`, requestOptions);
+  return handleResponse(response);
+}
+
+async function update(user: any) {
+  const requestOptions = {
+      method: 'PUT',
+      headers: { ...authHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(user)
+  } as any;
+
+  const response = await fetch(`${config.apiUrl}/users/${user.id}`, requestOptions);
+  return handleResponse(response);
+}
+
+// prefixed function name with underscore because delete is a reserved word in javascript
+async function _delete(id: string) {
+  const requestOptions = {
+      method: 'DELETE',
+      headers: authHeader()
+  } as any;
+
+  const response = await fetch(`${config.apiUrl}/users/${id}`, requestOptions);
   return handleResponse(response);
 }
 

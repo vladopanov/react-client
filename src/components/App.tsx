@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { history } from '../helpers';
@@ -7,20 +7,20 @@ import { alertActions } from '../actions';
 import { PrivateRoute } from '../components/common';
 import { HomePage } from '../components/HomePage';
 import { LoginPage } from '../components/LoginPage';
+import { RegisterPage } from '../components/RegisterPage';
 
 export interface IProps {
-  dispatch: any;
   alert: any;
+  clearAlerts: any;
 }
 
 class App extends React.Component<IProps> {
-  constructor(props) {
+  constructor(props: IProps) {
     super(props);
 
-    const { dispatch } = this.props;
     history.listen((location, action) => {
       // clear alert on location change
-      dispatch(alertActions.clear());
+      this.props.clearAlerts();
     });
   }
 
@@ -34,10 +34,12 @@ class App extends React.Component<IProps> {
               <div className={`alert ${alert.type}`}>{alert.message}</div>
             )}
             <Router history={history}>
-              <div>
+              <Switch>
                 <PrivateRoute exact path='/' component={HomePage} />
                 <Route path='/login' component={LoginPage} />
-              </div>
+                <Route path='/register' component={RegisterPage} />
+                <Redirect from='*' to='/' />
+              </Switch>
             </Router>
           </div>
         </div>
@@ -46,13 +48,17 @@ class App extends React.Component<IProps> {
   }
 }
 
-function mapStateToProps(state) {
+function mapState(state: any) {
   const { alert } = state;
   return {
     alert
   };
 }
 
-const connectedApp = connect(mapStateToProps)(App);
+const actionCreators = {
+  clearAlerts: alertActions.clear
+};
+
+const connectedApp = connect(mapState, actionCreators)(App);
 
 export default hot(connectedApp);

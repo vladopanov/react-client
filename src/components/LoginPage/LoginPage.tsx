@@ -3,17 +3,24 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
 
-export interface IProps {
-  dispatch: any;
+interface IProps {
   loggingIn: any;
+  login: any;
+  logout: any;
 }
 
-class LoginPage extends React.Component<IProps, any> {
-  constructor(props) {
+interface IState {
+  username: string;
+  password: string;
+  submitted: boolean;
+}
+
+class LoginPage extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
 
     // reset login status
-    this.props.dispatch(userActions.logout());
+    this.props.logout();
 
     this.state = {
       username: '',
@@ -21,8 +28,8 @@ class LoginPage extends React.Component<IProps, any> {
       submitted: false
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this._handleChange = this._handleChange.bind(this);
+    this._handleSubmit = this._handleSubmit.bind(this);
   }
 
   public render() {
@@ -31,75 +38,60 @@ class LoginPage extends React.Component<IProps, any> {
     return (
       <div className='col-md-6 col-md-offset-3'>
         <h2>Login</h2>
-        <form name='form' onSubmit={this.handleSubmit}>
-          <div
-            className={
-              'form-group' + (submitted && !username ? ' has-error' : '')
-            }
-          >
+        <form name='form' onSubmit={this._handleSubmit}>
+          <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
             <label htmlFor='username'>Username</label>
-            <input
-              type='text'
-              className='form-control'
-              name='username'
-              value={username}
-              onChange={this.handleChange}
-            />
-            {submitted && !username && (
+            <input type='text' className='form-control' name='username' value={username} onChange={this._handleChange} />
+            {submitted && !username &&
               <div className='help-block'>Username is required</div>
-            )}
-          </div>
-          <div
-            className={
-              'form-group' + (submitted && !password ? ' has-error' : '')
             }
-          >
+          </div>
+          <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
             <label htmlFor='password'>Password</label>
-            <input
-              type='password'
-              className='form-control'
-              name='password'
-              value={password}
-              onChange={this.handleChange}
-            />
-            {submitted && !password && (
+            <input type='password' className='form-control' name='password' value={password} onChange={this._handleChange} />
+            {submitted && !password &&
               <div className='help-block'>Password is required</div>
-            )}
+            }
           </div>
           <div className='form-group'>
             <button className='btn btn-primary'>Login</button>
-            {loggingIn && (
+            {loggingIn &&
               <img src='data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==' />
-            )}
+            }
+            <Link to='/register' className='btn btn-link'>Register</Link>
           </div>
         </form>
       </div>
     );
   }
 
-  private handleChange(e) {
+  private _handleChange(e: any) {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value } as IState );
   }
 
-  private handleSubmit(e) {
+  private _handleSubmit(e: any) {
     e.preventDefault();
 
     this.setState({ submitted: true });
     const { username, password } = this.state;
-    const { dispatch } = this.props;
     if (username && password) {
-      dispatch(userActions.login(username, password));
+      this.props.login(username, password);
     }
   }
 }
 
-function mapStateToProps(state) {
+function mapState(state: any) {
   const { loggingIn } = state.authentication;
   return {
     loggingIn
   };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(LoginPage);
+const actionCreators = {
+  login: userActions.login,
+  logout: userActions.logout
+};
+
+const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
 export { connectedLoginPage as LoginPage };

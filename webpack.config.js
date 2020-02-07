@@ -1,17 +1,17 @@
-const webpack = require('webpack');
-const path = require('path');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require('webpack')
+const path = require('path')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
-const CURRENT_PATH = __dirname;
-const BASE_PATH = './';
-const OUT_DIR_PATH = `${BASE_PATH}/dist`;
-const MODE = process.env.NODE_ENV || 'development';
+const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production'
+const CURRENT_PATH = __dirname
+const BASE_PATH = './'
+const OUT_DIR_PATH = `${BASE_PATH}/dist`
+const MODE = process.env.NODE_ENV || 'development'
 
 const setUrlLoaderOutput = folder =>
-  IS_DEVELOPMENT ? `${folder}/[name].[ext]` : `${folder}/[hash].[ext]`;
+  IS_DEVELOPMENT ? `${folder}/[name].[ext]` : `${folder}/[hash].[ext]`
 
 const config = {
   mode: MODE,
@@ -126,21 +126,21 @@ const config = {
     }
   },
   externals: {}
-};
+}
 
 if (IS_DEVELOPMENT) {
-  config.output.publicPath = 'http://localhost:3000/';
+  config.output.publicPath = 'http://localhost:3000/'
   config.devServer = {
     contentBase: OUT_DIR_PATH,
     host: 'localhost',
     port: 3000,
     hot: true
-  };
+  }
 
   config.plugins.push(
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin()
-  );
+  )
 } else {
   config.optimization.minimizer.push(
     new UglifyJsPlugin({
@@ -148,7 +148,7 @@ if (IS_DEVELOPMENT) {
       parallel: true,
       sourceMap: true // set to true if you want JS source maps
     })
-  );
+  )
 }
 
-module.exports = config;
+module.exports = config
