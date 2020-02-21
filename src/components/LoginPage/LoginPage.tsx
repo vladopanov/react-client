@@ -1,40 +1,40 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { userActions } from '../../actions';
+import * as React from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { userActions } from '../../actions'
 
 interface IProps {
-  loggingIn: any;
-  login: any;
-  logout: any;
+  loggingIn: any
+  login: any
+  logout: any
 }
 
 interface IState {
-  username: string;
-  password: string;
-  submitted: boolean;
+  username: string
+  password: string
+  submitted: boolean
 }
 
 class LoginPage extends React.Component<IProps, IState> {
   constructor(props: IProps) {
-    super(props);
+    super(props)
 
     // reset login status
-    this.props.logout();
+    this.props.logout()
 
     this.state = {
       username: '',
       password: '',
       submitted: false
-    };
+    }
 
-    this._handleChange = this._handleChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleChange = this._handleChange.bind(this)
+    this._handleSubmit = this._handleSubmit.bind(this)
   }
 
   public render() {
-    const { loggingIn } = this.props;
-    const { username, password, submitted } = this.state;
+    const { loggingIn } = this.props
+    const { username, password, submitted } = this.state
     return (
       <div className='col-md-6 col-md-offset-3'>
         <h2>Login</h2>
@@ -62,36 +62,36 @@ class LoginPage extends React.Component<IProps, IState> {
           </div>
         </form>
       </div>
-    );
+    )
   }
 
   private _handleChange(e: any) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value } as IState );
+    const { name, value } = e.target
+    this.setState({ [name]: value } as IState )
   }
 
   private _handleSubmit(e: any) {
-    e.preventDefault();
+    e.preventDefault()
 
-    this.setState({ submitted: true });
-    const { username, password } = this.state;
+    this.setState({ submitted: true })
+    const { username, password } = this.state
     if (username && password) {
-      this.props.login(username, password);
+      this.props.login(username, password)
     }
   }
 }
 
 function mapState(state: any) {
-  const { loggingIn } = state.authentication;
+  const { loggingIn } = state.authentication
   return {
     loggingIn
-  };
+  }
 }
 
 const actionCreators = {
   login: userActions.login,
   logout: userActions.logout
-};
+}
 
-const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
-export { connectedLoginPage as LoginPage };
+const connectedLoginPage = connect(mapState, actionCreators)(LoginPage)
+export { connectedLoginPage as LoginPage }

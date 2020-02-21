@@ -1,3 +1,3 @@
-export * from './fakeBackend';
-export * from './history';
-export * from './authHeader';
+export * from './fakeBackend'
+export * from './history'
+export * from './authHeader'

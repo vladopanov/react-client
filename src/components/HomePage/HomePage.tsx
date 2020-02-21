@@ -1,29 +1,29 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { userActions } from '../../actions';
-import { User } from '../../models/user';
+import * as React from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { userActions } from '../../actions'
+import { User } from '../../models/user'
 
 interface IProps {
-  user: User;
-  users: any;
-  getUsers: any;
-  deleteUser: any;
+  user: User
+  users: any
+  getUsers: any
+  deleteUser: any
 }
 
 class HomePage extends React.Component<IProps> {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this._handleDeleteUser = this._handleDeleteUser.bind(this);
+    this._handleDeleteUser = this._handleDeleteUser.bind(this)
   }
 
   public componentDidMount() {
-    this.props.getUsers();
+    this.props.getUsers()
   }
 
   public render() {
-    const { user, users } = this.props;
+    const { user, users } = this.props
     return (
       <div className='col-md-6 col-md-offset-3'>
         <h1>Hi {user.firstName}!</h1>
@@ -49,27 +49,27 @@ class HomePage extends React.Component<IProps> {
             <Link to='/login'>Logout</Link>
         </p>
       </div>
-    );
+    )
   }
 
   private _handleDeleteUser(id: string) {
-    return (e: any) => this.props.deleteUser(id);
+    return (e: any) => this.props.deleteUser(id)
   }
 }
 
 function mapState(state: any) {
-  const { users, authentication } = state;
-  const { user } = authentication;
+  const { users, authentication } = state
+  const { user } = authentication
   return {
     user,
     users
-  };
+  }
 }
 
 const actionCreators = {
   getUsers: userActions.getAll,
   deleteUser: userActions.delete
-};
+}
 
-const connectedHomePage = connect(mapState, actionCreators)(HomePage);
-export { connectedHomePage as HomePage };
+const connectedHomePage = connect(mapState, actionCreators)(HomePage)
+export { connectedHomePage as HomePage }

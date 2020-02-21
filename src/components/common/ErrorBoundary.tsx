@@ -1,9 +1,9 @@
-import * as React from 'react';
+import * as React from 'react'
 
 export class ErrorBoundary extends React.Component<{}, any> {
   constructor(props) {
-    super(props);
-    this.state = { error: null, errorInfo: null };
+    super(props)
+    this.state = { error: null, errorInfo: null }
   }
 
   public componentDidCatch(error, errorInfo) {
@@ -11,7 +11,7 @@ export class ErrorBoundary extends React.Component<{}, any> {
     this.setState({
       error: error,
       errorInfo: errorInfo
-    });
+    })
     // You can also log error messages to an error reporting service here
   }
 
@@ -27,9 +27,9 @@ export class ErrorBoundary extends React.Component<{}, any> {
             {this.state.errorInfo.componentStack}
           </details>
         </div>
-      );
+      )
     }
     // Normally, just render children
-    return this.props.children;
+    return this.props.children
   }
 }

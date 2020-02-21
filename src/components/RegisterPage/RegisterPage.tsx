@@ -1,12 +1,12 @@
-import * as  React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import * as  React from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-import { userActions } from '../../actions';
+import { userActions } from '../../actions'
 
 interface IProps {
-  register: any;
-  registering: boolean;
+  register: any
+  registering: boolean
 }
 
 interface IState {
@@ -15,13 +15,13 @@ interface IState {
     lastName: string,
     username: string,
     password: string
-  };
-  submitted: boolean;
+  }
+  submitted: boolean
 }
 
 class RegisterPage extends React.Component<IProps, IState> {
   constructor(props: IProps) {
-    super(props);
+    super(props)
 
     this.state = {
       user: {
@@ -31,36 +31,36 @@ class RegisterPage extends React.Component<IProps, IState> {
         password: ''
       },
       submitted: false
-    };
+    }
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   public handleChange(event: any) {
-    const { name, value } = event.target;
-    const { user } = this.state;
+    const { name, value } = event.target
+    const { user } = this.state
     this.setState({
       user: {
         ...user,
         [name]: value
       }
-    });
+    })
   }
 
   public handleSubmit(event: any) {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.setState({ submitted: true });
-    const { user } = this.state;
+    this.setState({ submitted: true })
+    const { user } = this.state
     if (user.firstName && user.lastName && user.username && user.password) {
-        this.props.register(user);
+        this.props.register(user)
     }
   }
 
   public render() {
-    const { registering  } = this.props;
-    const { user, submitted } = this.state;
+    const { registering  } = this.props
+    const { user, submitted } = this.state
     return (
       <div className='col-md-6 col-md-offset-3'>
         <h2>Register</h2>
@@ -102,18 +102,18 @@ class RegisterPage extends React.Component<IProps, IState> {
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
 
 function mapState(state: any) {
-    const { registering } = state.registration;
-    return { registering };
+    const { registering } = state.registration
+    return { registering }
 }
 
 const actionCreators = {
     register: userActions.register
-};
+}
 
-const connectedRegisterPage = connect(mapState, actionCreators)(RegisterPage);
-export { connectedRegisterPage as RegisterPage };
+const connectedRegisterPage = connect(mapState, actionCreators)(RegisterPage)
+export { connectedRegisterPage as RegisterPage }
